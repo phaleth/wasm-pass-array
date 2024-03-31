@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script type="module">
+        (async () => {
+            const { instance } = await WebAssembly.instantiateStreaming(
+                fetch("./sum.wasm"),
+            );
+
+            const jsArray = [1, 2, 3, 4, 5];
+
+            const cArrayPointer = instance.exports.malloc(jsArray.length * 4);
+
+            const cArray = new Uint32Array(
+                instance.exports.memory.buffer,
+                cArrayPointer,
+                jsArray.length
+            );
+
+            cArray.set(jsArray);
+
+            console.log('sum', instance.exports.sum(cArrayPointer, cArray.length));
+
+            instance.exports.free();
+        })();
+    </script>
+</body>
+
+</html>
