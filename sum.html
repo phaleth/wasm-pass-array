@@ -28,7 +28,7 @@
 
             console.log('sum', instance.exports.sum(cArrayPointer, cArray.length));
 
-            instance.exports.free();
+            instance.exports.free(cArrayPointer);
         })();
     </script>
 </body>
